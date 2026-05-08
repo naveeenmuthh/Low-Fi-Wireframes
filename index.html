@@ -1,0 +1,633 @@
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--font-sans);color:var(--color-text-primary);font-size:13px}
+.root{padding:1rem 0}
+.nav{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:1.5rem;border-bottom:0.5px solid var(--color-border-tertiary);padding-bottom:1rem}
+.nav-btn{padding:6px 12px;border:0.5px solid var(--color-border-secondary);border-radius:var(--border-radius-md);background:var(--color-background-primary);color:var(--color-text-secondary);cursor:pointer;font-size:12px;font-family:var(--font-sans);transition:all .15s}
+.nav-btn.active{background:var(--color-background-secondary);color:var(--color-text-primary);border-color:var(--color-border-primary);font-weight:500}
+.screen{display:none}
+.screen.active{display:block}
+.screen-title{font-size:18px;font-weight:500;margin-bottom:4px;color:var(--color-text-primary)}
+.screen-goal{font-size:13px;color:var(--color-text-secondary);margin-bottom:1.5rem;padding-bottom:1rem;border-bottom:0.5px solid var(--color-border-tertiary)}
+.wf-shell{background:var(--color-background-secondary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);padding:1rem;margin-bottom:1.5rem;font-family:var(--font-mono);font-size:11px;line-height:1.6}
+.wf-row{display:flex;gap:8px;margin-bottom:8px}
+.wf-box{border:1.5px dashed var(--color-border-secondary);border-radius:4px;padding:6px 8px;color:var(--color-text-secondary);line-height:1.4;flex:1}
+.wf-box.solid{border-style:solid;background:var(--color-background-primary)}
+.wf-box.accent{border-style:solid;border-color:#888780;background:var(--color-background-secondary)}
+.wf-box.dark{border-style:solid;background:#2C2C2A;color:#D3D1C7}
+.wf-box.ai{border:1.5px dashed #534AB7;background:#EEEDFE;color:#3C3489}
+.wf-box.warn{border:1.5px solid #BA7517;background:#FAEEDA;color:#633806}
+.wf-box.danger{border:1.5px solid #A32D2D;background:#FCEBEB;color:#791F1F}
+.wf-box.success{border:1.5px solid #3B6D11;background:#EAF3DE;color:#27500A}
+.wf-label{font-size:10px;font-weight:500;text-transform:uppercase;letter-spacing:.5px;color:var(--color-text-tertiary);margin-bottom:4px}
+.wf-divider{height:0.5px;background:var(--color-border-tertiary);margin:8px 0}
+.wf-btn{display:inline-block;border:1.5px solid #888780;border-radius:3px;padding:3px 8px;font-size:10px;color:var(--color-text-secondary);margin:2px}
+.wf-btn.primary{border-color:#534AB7;background:#EEEDFE;color:#3C3489}
+.wf-btn.cta{border:none;background:#2C2C2A;color:#D3D1C7;border-radius:3px;padding:4px 10px;font-size:11px}
+.wf-chip{display:inline-block;border:0.5px solid var(--color-border-secondary);border-radius:2px;padding:2px 6px;font-size:10px;color:var(--color-text-secondary);margin:2px}
+.wf-dot{display:inline-block;width:7px;height:7px;border-radius:50%;margin-right:4px}
+.wf-dot.g{background:#639922}.wf-dot.a{background:#BA7517}.wf-dot.r{background:#E24B4A}
+.annotations{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1.5rem}
+.ann-card{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);padding:1rem}
+.ann-head{font-size:12px;font-weight:500;color:var(--color-text-secondary);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;display:flex;align-items:center;gap:6px}
+.ann-head i{font-size:14px}
+.ann-item{font-size:12px;color:var(--color-text-secondary);padding:4px 0;border-bottom:0.5px solid var(--color-border-tertiary);line-height:1.5}
+.ann-item:last-child{border-bottom:none}
+.ann-item strong{color:var(--color-text-primary);font-weight:500}
+.kpi-row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:1rem}
+.kpi-tag{border:0.5px solid var(--color-border-secondary);border-radius:var(--border-radius-md);padding:4px 10px;font-size:11px;color:var(--color-text-secondary);background:var(--color-background-secondary)}
+.risk-row{background:var(--color-background-secondary);border-left:3px solid #BA7517;border-radius:0 var(--border-radius-md) var(--border-radius-md) 0;padding:8px 12px;margin-bottom:8px;font-size:12px;color:var(--color-text-secondary)}
+.section-label{font-size:11px;font-weight:500;color:var(--color-text-tertiary);text-transform:uppercase;letter-spacing:.5px;margin:1rem 0 6px}
+.wf-heatmap{display:grid;grid-template-columns:repeat(6,1fr);gap:3px;padding:4px}
+.hm-cell{height:16px;border-radius:2px}
+.hm-h{background:#27500A}.hm-m{background:#639922}.hm-l{background:#FAEEDA}.hm-n{background:#FCEBEB}
+.wf-bar{height:6px;border-radius:2px;background:#B4B2A9;margin-bottom:3px;position:relative}
+.wf-bar-fill{height:100%;border-radius:2px}
+.timeline-row{display:flex;align-items:center;gap:6px;padding:3px 0;font-size:11px;color:var(--color-text-secondary)}
+.timeline-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
+</style>
+
+<div class="root">
+<h2 class="sr-only">Zoom Education — low-fidelity wireframes for 5 redesigned screens: AI Classroom Dashboard, Live Classroom, Attendance Analytics, Academic Integrity, and LMS Integration.</h2>
+
+<div class="nav">
+  <span style="font-size:12px;color:var(--color-text-tertiary);padding:6px 4px;align-self:center">Zoom Edu ↗</span>
+  <button class="nav-btn active" onclick="show(0)">01 — Dashboard</button>
+  <button class="nav-btn" onclick="show(1)">02 — Live Class</button>
+  <button class="nav-btn" onclick="show(2)">03 — Analytics</button>
+  <button class="nav-btn" onclick="show(3)">04 — Integrity</button>
+  <button class="nav-btn" onclick="show(4)">05 — LMS</button>
+</div>
+
+<!-- SCREEN 1: AI CLASSROOM DASHBOARD -->
+<div class="screen active" id="s0">
+  <div class="screen-title">Screen 1 — AI classroom dashboard</div>
+  <div class="screen-goal"><i class="ti ti-target" aria-hidden="true"></i> Teacher landing page before class. Reduces cognitive load from fragmented tools. Business goal: increase daily active teachers + platform stickiness.</div>
+
+  <div class="wf-shell">
+    <div class="wf-row" style="margin-bottom:4px">
+      <div class="wf-box dark" style="flex:0 0 180px">
+        <div class="wf-label" style="color:#888780">Nav</div>
+        <div style="padding:3px 0;border-bottom:0.5px solid #444">🎓 Zoom Edu</div>
+        <div style="padding:3px 0;color:#D3D1C7;font-size:11px">● Dashboard</div>
+        <div style="padding:3px 0;font-size:11px">  Classes</div>
+        <div style="padding:3px 0;font-size:11px">  Students</div>
+        <div style="padding:3px 0;font-size:11px">  LMS</div>
+        <div style="padding:3px 0;font-size:11px">  Reports</div>
+        <div style="padding:3px 0;font-size:11px">  Settings</div>
+        <div style="margin-top:12px;font-size:10px;color:#888780">Ms. Rivera — Grade 7</div>
+      </div>
+      <div style="flex:1;display:flex;flex-direction:column;gap:8px">
+        <div class="wf-row">
+          <div class="wf-box solid" style="flex:2">
+            <div class="wf-label">Today's schedule</div>
+            <div class="timeline-row"><div class="timeline-dot" style="background:#639922"></div>09:00 — Math 7A <span class="wf-btn cta" style="margin-left:auto;font-size:10px">▶ Start class</span></div>
+            <div class="timeline-row"><div class="timeline-dot" style="background:#B4B2A9"></div>11:00 — Science 7B</div>
+            <div class="timeline-row"><div class="timeline-dot" style="background:#B4B2A9"></div>14:00 — Math 7C</div>
+          </div>
+          <div class="wf-box ai" style="flex:1.2">
+            <div class="wf-label" style="color:#534AB7">✦ AI assistant</div>
+            <div style="font-size:11px">"Math 7A recap: 4 students struggled with fractions. Suggest revisiting section 3.2 today."</div>
+            <div style="margin-top:6px"><span class="wf-btn primary">Accept suggestion</span><span class="wf-btn">Dismiss</span></div>
+          </div>
+        </div>
+
+        <div class="wf-row">
+          <div class="wf-box warn">
+            <div class="wf-label" style="color:#BA7517">⚠ Attendance risk</div>
+            <div style="font-size:11px"><span class="wf-dot a"></span>3 students flagged: absent 2+ sessions<br><span class="wf-dot r"></span>Jamie K. — 4 absences this month</div>
+          </div>
+          <div class="wf-box success">
+            <div class="wf-label" style="color:#3B6D11">Engagement trend</div>
+            <div style="font-size:11px"><span class="wf-dot g"></span>Class avg: 78% — ↑ 6% this week</div>
+            <div class="wf-bar" style="margin-top:5px"><div class="wf-bar-fill" style="width:78%;background:#639922"></div></div>
+          </div>
+          <div class="wf-box solid">
+            <div class="wf-label">LMS assignments</div>
+            <div style="font-size:11px">● 2 ungraded quizzes<br>● Homework due today: 18/24 submitted</div>
+          </div>
+        </div>
+
+        <div class="wf-row">
+          <div class="wf-box solid">
+            <div class="wf-label">Lesson prep — Math 7A</div>
+            <div style="font-size:11px">AI summary: Fractions & decimals · 45 min · 3 activities linked · Google Classroom synced</div>
+            <div style="margin-top:5px"><span class="wf-btn">View plan</span><span class="wf-btn primary">✦ Generate recap</span></div>
+          </div>
+          <div class="wf-box solid" style="flex:0 0 140px">
+            <div class="wf-label">Quick stats</div>
+            <div style="font-size:11px">Students: 24<br>Avg score: 74%<br>Sessions this month: 16</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="annotations">
+    <div class="ann-card">
+      <div class="ann-head"><i class="ti ti-user" aria-hidden="true"></i>UX rationale</div>
+      <div class="ann-item"><strong>Persistent AI panel</strong> — surfaces proactive insights without requiring teacher to query. Reduces decision fatigue.</div>
+      <div class="ann-item"><strong>Attendance risk above fold</strong> — early intervention window. Teachers act on alerts before class, not after.</div>
+      <div class="ann-item"><strong>Single CTA per class row</strong> — "Start class" is the dominant action. No hunting through menus.</div>
+      <div class="ann-item"><strong>LMS widget inline</strong> — eliminates context-switch to Canvas/Google Classroom for pre-class prep.</div>
+    </div>
+    <div class="ann-card">
+      <div class="ann-head"><i class="ti ti-building-store" aria-hidden="true"></i>Business rationale</div>
+      <div class="ann-item"><strong>Stickiness</strong> — daily check-in habit forms around the dashboard, not just live sessions.</div>
+      <div class="ann-item"><strong>LMS integration value</strong> — positions Zoom as the hub, not the peripheral tool. Reduces churn to competitors like Teams EDU.</div>
+      <div class="ann-item"><strong>AI differentiation</strong> — proactive lesson suggestions create "wow" moment not available on standard Zoom.</div>
+    </div>
+    <div class="ann-card">
+      <div class="ann-head"><i class="ti ti-brain" aria-hidden="true"></i>AI opportunities</div>
+      <div class="ann-item"><strong>Lesson gap detection</strong> — NLP on quiz results → surface weakest concepts before class starts.</div>
+      <div class="ann-item"><strong>Attendance prediction</strong> — pattern recognition on absence history → proactive alerts to counselors.</div>
+      <div class="ann-item"><strong>Prep automation</strong> — AI-generated lesson recaps from prior session summaries and LMS content.</div>
+    </div>
+    <div class="ann-card">
+      <div class="ann-head"><i class="ti ti-accessible" aria-hidden="true"></i>Accessibility + risks</div>
+      <div class="ann-item"><strong>A11y</strong> — Color status (red/amber/green) must have text labels. Sidebar collapsible for low-res screens.</div>
+      <div class="ann-item"><strong>Risk</strong> — AI suggestion fatigue. If alerts are too frequent, teachers ignore them. Needs tunable thresholds.</div>
+      <div class="ann-item"><strong>Risk</strong> — Privacy: attendance risk flags must be FERPA-compliant; visible to authorized staff only.</div>
+    </div>
+  </div>
+
+  <div class="section-label">Suggested KPIs</div>
+  <div class="kpi-row">
+    <span class="kpi-tag">Daily active teachers ↑</span>
+    <span class="kpi-tag">Pre-class session opens ↑</span>
+    <span class="kpi-tag">LMS integration rate ↑</span>
+    <span class="kpi-tag">AI suggestion acceptance rate</span>
+    <span class="kpi-tag">Teacher 30-day retention ↑</span>
+  </div>
+</div>
+
+<!-- SCREEN 2: LIVE CLASSROOM -->
+<div class="screen" id="s1">
+  <div class="screen-title">Screen 2 — live classroom experience</div>
+  <div class="screen-goal"><i class="ti ti-video" aria-hidden="true"></i> Reimagined meeting interface optimized for K-12. Replaces generic Zoom gallery view with classroom-native controls and AI visibility. Business goal: differentiate from generic conferencing.</div>
+
+  <div class="wf-shell">
+    <div class="wf-row">
+      <div class="wf-box dark" style="flex:0 0 160px;min-height:300px">
+        <div class="wf-label" style="color:#888780">Student roster</div>
+        <div style="font-size:10px;margin-bottom:4px;color:#888780">24 students · 22 live</div>
+        <div style="font-size:10px;line-height:2"><span class="wf-dot g"></span>Emma R. — 92%<br><span class="wf-dot g"></span>Carlos M. — 88%<br><span class="wf-dot a"></span>Priya S. — 61% ✋<br><span class="wf-dot a"></span>Noah T. — 55%<br><span class="wf-dot r"></span>Jamie K. — 23%<br><span class="wf-dot g"></span>Aiden W. — 85%<br><span class="wf-dot g"></span>Sofia L. — 90%<br>· · ·</div>
+        <div class="wf-divider"></div>
+        <div style="font-size:10px;color:#EF9F27">✋ Raise queue (2)<br>→ Priya S.<br>→ Marcus D.</div>
+      </div>
+
+      <div style="flex:1;display:flex;flex-direction:column;gap:6px">
+        <div class="wf-row">
+          <div class="wf-box solid" style="flex:3;min-height:80px">
+            <div class="wf-label">Main stage — teacher view</div>
+            <div style="background:var(--color-background-secondary);border-radius:3px;padding:8px;text-align:center;font-size:11px;color:var(--color-text-tertiary);min-height:60px;display:flex;align-items:center;justify-content:center">[Teacher camera / screen share / whiteboard]</div>
+          </div>
+          <div class="wf-box ai" style="flex:1.2">
+            <div class="wf-label" style="color:#534AB7">✦ AI insights</div>
+            <div style="font-size:10px;line-height:1.7">Attention score<br><strong style="font-size:13px;color:#3C3489">74%</strong><br><div class="wf-bar" style="margin-top:3px"><div class="wf-bar-fill" style="width:74%;background:#534AB7"></div></div><br>Drop detected at 9:18<br>"Consider a quick poll"</div>
+          </div>
+        </div>
+
+        <div class="wf-row" style="flex-wrap:wrap;gap:5px">
+          <div style="background:var(--color-background-secondary);border:0.5px solid var(--color-border-tertiary);border-radius:3px;padding:4px 6px;font-size:10px;min-width:65px;text-align:center">Emma<br><div class="wf-dot g" style="display:inline-block"></div></div>
+          <div style="background:var(--color-background-secondary);border:0.5px solid var(--color-border-tertiary);border-radius:3px;padding:4px 6px;font-size:10px;min-width:65px;text-align:center">Carlos<br><div class="wf-dot g" style="display:inline-block"></div></div>
+          <div style="background:var(--color-background-secondary);border:1.5px solid #EF9F27;border-radius:3px;padding:4px 6px;font-size:10px;min-width:65px;text-align:center">Priya ✋<br><div class="wf-dot a" style="display:inline-block"></div></div>
+          <div style="background:#FCEBEB;border:1.5px solid #E24B4A;border-radius:3px;padding:4px 6px;font-size:10px;min-width:65px;text-align:center;color:#791F1F">Jamie<br>low att.</div>
+          <div style="background:var(--color-background-secondary);border:0.5px solid var(--color-border-tertiary);border-radius:3px;padding:4px 6px;font-size:10px;min-width:65px;text-align:center">Noah<br><div class="wf-dot a" style="display:inline-block"></div></div>
+          <div style="background:var(--color-background-secondary);border:0.5px solid var(--color-border-tertiary);border-radius:3px;padding:4px 6px;font-size:10px;min-width:65px;text-align:center">Sofia<br><div class="wf-dot g" style="display:inline-block"></div></div>
+          <div style="background:var(--color-background-secondary);border:0.5px dashed var(--color-border-tertiary);border-radius:3px;padding:4px 6px;font-size:10px;min-width:65px;text-align:center;color:var(--color-text-tertiary)">+18 more</div>
+        </div>
+
+        <div class="wf-row">
+          <div class="wf-box solid" style="flex:2">
+            <div class="wf-label">Engagement heatmap</div>
+            <div class="wf-heatmap">
+              <div class="hm-cell hm-h"></div><div class="hm-cell hm-h"></div><div class="hm-cell hm-m"></div><div class="hm-cell hm-h"></div><div class="hm-cell hm-l"></div><div class="hm-cell hm-m"></div>
+              <div class="hm-cell hm-m"></div><div class="hm-cell hm-h"></div><div class="hm-cell hm-h"></div><div class="hm-cell hm-n"></div><div class="hm-cell hm-l"></div><div class="hm-cell hm-m"></div>
+              <div class="hm-cell hm-l"></div><div class="hm-cell hm-m"></div><div class="hm-cell hm-h"></div><div class="hm-cell hm-h"></div><div class="hm-cell hm-m"></div><div class="hm-cell hm-n"></div>
+            </div>
+            <div style="font-size:9px;color:var(--color-text-tertiary);margin-top:3px"><span style="background:#27500A;display:inline-block;width:8px;height:6px;border-radius:1px"></span> high &nbsp;<span style="background:#639922;display:inline-block;width:8px;height:6px;border-radius:1px"></span> mid &nbsp;<span style="background:#FAEEDA;display:inline-block;width:8px;height:6px;border-radius:1px"></span> low &nbsp;<span style="background:#FCEBEB;display:inline-block;width:8px;height:6px;border-radius:1px"></span> off</span>
+          </div>
+          <div class="wf-box solid" style="flex:1.5">
+            <div class="wf-label">Live poll / quiz</div>
+            <div style="font-size:10px">Q: What is ½ + ¼?</div>
+            <div style="font-size:10px;margin-top:4px"><div class="wf-bar"><div class="wf-bar-fill" style="width:60%;background:#534AB7"></div></div>A: ¾ — 60%<div class="wf-bar"><div class="wf-bar-fill" style="width:25%;background:#B4B2A9"></div></div>B: ½ — 25%</div>
+            <div style="margin-top:5px"><span class="wf-btn primary">Launch poll</span><span class="wf-btn">Breakouts</span></div>
+          </div>
+          <div class="wf-box solid" style="flex:1">
+            <div class="wf-label">Moderation</div>
+            <div style="font-size:10px"><span class="wf-btn">Mute all</span><span class="wf-btn">Lock room</span><span class="wf-btn">Focus mode</span></div>
+            <div style="font-size:10px;margin-top:4px;color:var(--color-text-tertiary)">Breakout: 3 rooms ready</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="wf-divider"></div>
+    <div style="display:flex;gap:8px;align-items:center">
+      <span class="wf-btn"><i class="ti ti-microphone"></i> Mic</span>
+      <span class="wf-btn"><i class="ti ti-video"></i> Cam</span>
+      <span class="wf-btn">Screen share</span>
+      <span class="wf-btn primary">✦ AI assist</span>
+      <span class="wf-btn warn" style="border-color:#BA7517;color:#633806">Assessment mode</span>
+      <span class="wf-btn danger" style="border-color:#A32D2D;color:#791F1F;margin-left:auto">End class</span>
+    </div>
+  </div>
+
+  <div class="annotations">
+    <div class="ann-card">
+      <div class="ann-head"><i class="ti ti-layout" aria-hidden="true"></i>UX rationale</div>
+      <div class="ann-item"><strong>Engagement heatmap</strong> — spatial grid replaces flat roster. Teacher sees attention patterns at a glance without reading names.</div>
+      <div class="ann-item"><strong>Raise hand queue</strong> — ordered list prevents students from being ignored. Reduces classroom management chaos.</div>
+      <div class="ann-item"><strong>AI insight panel persistent</strong> — real-time nudges ("consider a poll") without interrupting the lesson flow.</div>
+      <div class="ann-item"><strong>Red-bordered student tiles</strong> — low-attention students visually pop without requiring a separate report view.</div>
+    </div>
+    <div class="ann-card">
+      <div class="ann-head"><i class="ti ti-building-store" aria-hidden="true"></i>Business rationale</div>
+      <div class="ann-item"><strong>Session duration ↑</strong> — teachers stay engaged longer with more classroom tools available natively.</div>
+      <div class="ann-item"><strong>Competitive moat</strong> — no generic conferencing tool offers engagement heatmaps. Hard to replicate quickly.</div>
+      <div class="ann-item"><strong>Upsell lever</strong> — AI attention insights and assessment mode can be Edu Premium features.</div>
+    </div>
+    <div class="ann-card">
+      <div class="ann-head"><i class="ti ti-brain" aria-hidden="true"></i>AI opportunities</div>
+      <div class="ann-item"><strong>Attention detection</strong> — CV/audio signals → per-student engagement score (opt-in, COPPA-compliant).</div>
+      <div class="ann-item"><strong>Pacing AI</strong> — detects when class attention drops; suggests pauses, polls, or topic transitions.</div>
+      <div class="ann-item"><strong>Smart breakout assignment</strong> — AI groups students by performance gaps for targeted peer learning.</div>
+    </div>
+    <div class="ann-card">
+      <div class="ann-head"><i class="ti ti-accessible" aria-hidden="true"></i>Accessibility + risks</div>
+      <div class="ann-item"><strong>A11y</strong> — all heatmap cells need ARIA labels. Keyboard navigable raise-hand queue. Captions always visible.</div>
+      <div class="ann-item"><strong>Risk</strong> — student surveillance optics. Engagement tracking must be opt-in and transparent to parents/guardians.</div>
+      <div class="ann-item"><strong>Risk</strong> — cognitive overload. Teacher has many panels; default collapsed state + teacher-controlled layout.</div>
+    </div>
+  </div>
+
+  <div class="section-label">Suggested KPIs</div>
+  <div class="kpi-row">
+    <span class="kpi-tag">Live session duration ↑</span>
+    <span class="kpi-tag">Polls launched per session ↑</span>
+    <span class="kpi-tag">Avg engagement score ↑</span>
+    <span class="kpi-tag">Breakout room usage ↑</span>
+    <span class="kpi-tag">Teacher NPS ↑</span>
+  </div>
+</div>
+
+<!-- SCREEN 3: ANALYTICS -->
+<div class="screen" id="s2">
+  <div class="screen-title">Screen 3 — AI attendance & participation analytics</div>
+  <div class="screen-goal"><i class="ti ti-chart-bar" aria-hidden="true"></i> Automates attendance and participation reporting. Eliminates manual tracking. Business goal: create admin-level reporting value that drives school-wide adoption.</div>
+
+  <div class="wf-shell">
+    <div class="wf-row">
+      <div class="wf-box solid" style="flex:0 0 170px">
+        <div class="wf-label">Filters</div>
+        <div style="font-size:10px;line-height:2">Class: Math 7A ▾<br>Period: This month ▾<br>Student: All ▾</div>
+        <div class="wf-divider"></div>
+        <div style="font-size:10px">Export ▾<br><span class="wf-chip">CSV</span><span class="wf-chip">LMS sync</span><span class="wf-chip">PDF</span></div>
+        <div class="wf-divider"></div>
+        <div class="wf-box ai" style="margin-top:4px">
+          <div style="font-size:10px;color:#3C3489">✦ "Attendance dropped 12% on Fridays. Consider scheduling lighter content."</div>
+        </div>
+      </div>
+
+      <div style="flex:1;display:flex;flex-direction:column;gap:7px">
+        <div class="wf-row">
+          <div class="wf-box solid" style="text-align:center">
+            <div style="font-size:20px;font-weight:500">91%</div>
+            <div style="font-size:10px;color:var(--color-text-secondary)">Attendance rate</div>
+          </div>
+          <div class="wf-box solid" style="text-align:center">
+            <div style="font-size:20px;font-weight:500">74%</div>
+            <div style="font-size:10px;color:var(--color-text-secondary)">Avg engagement</div>
+          </div>
+          <div class="wf-box solid" style="text-align:center">
+            <div style="font-size:20px;font-weight:500">3</div>
+            <div style="font-size:10px;color:var(--color-text-secondary)">At-risk students</div>
+          </div>
+          <div class="wf-box solid" style="text-align:center">
+            <div style="font-size:20px;font-weight:500">16</div>
+            <div style="font-size:10px;color:var(--color-text-secondary)">Sessions this month</div>
+          </div>
+        </div>
+
+        <div class="wf-row">
+          <div class="wf-box solid" style="flex:2">
+            <div class="wf-label">Engagement over time</div>
+            <div style="position:relative;height:50px;border-bottom:0.5px solid var(--color-border-tertiary)">
+              <div style="position:absolute;bottom:10px;left:5%;width:10%;height:60%;background:#AFA9EC;border-radius:2px 2px 0 0"></div>
+              <div style="position:absolute;bottom:10px;left:18%;width:10%;height:75%;background:#7F77DD;border-radius:2px 2px 0 0"></div>
+              <div style="position:absolute;bottom:10px;left:31%;width:10%;height:55%;background:#AFA9EC;border-radius:2px 2px 0 0"></div>
+              <div style="position:absolute;bottom:10px;left:44%;width:10%;height:80%;background:#7F77DD;border-radius:2px 2px 0 0"></div>
+              <div style="position:absolute;bottom:10px;left:57%;width:10%;height:45%;background:#CECBF6;border-radius:2px 2px 0 0"></div>
+              <div style="position:absolute;bottom:10px;left:70%;width:10%;height:78%;background:#7F77DD;border-radius:2px 2px 0 0"></div>
+              <div style="position:absolute;bottom:10px;left:83%;width:10%;height:82%;background:#534AB7;border-radius:2px 2px 0 0"></div>
+            </div>
+            <div style="font-size:9px;color:var(--color-text-tertiary);margin-top:3px">Apr 1 · Apr 5 · Apr 9 · Apr 13 · Apr 17 · Apr 21 · Apr 25</div>
+          </div>
+          <div class="wf-box solid" style="flex:1.2">
+            <div class="wf-label">Attention drop-off</div>
+            <div style="font-size:10px;color:var(--color-text-secondary)">Avg drop at min 28</div>
+            <div class="wf-bar" style="margin:5px 0 2px"><div class="wf-bar-fill" style="width:95%;background:#639922"></div></div>
+            <div class="wf-bar"><div class="wf-bar-fill" style="width:80%;background:#97C459"></div></div>
+            <div class="wf-bar"><div class="wf-bar-fill" style="width:60%;background:#FAEEDA;border:0.5px solid #BA7517"></div></div>
+            <div class="wf-bar"><div class="wf-bar-fill" style="width:35%;background:#F09595;border:0.5px solid #E24B4A"></div></div>
+            <div style="font-size:9px;color:var(--color-text-tertiary);margin-top:2px">min 0 · 15 · 28 · 45</div>
+          </div>
+        </div>
+
+        <div class="wf-row">
+          <div class="wf-box solid" style="flex:2">
+            <div class="wf-label">Student participation timeline</div>
+            <div class="timeline-row"><div class="timeline-dot" style="background:#639922"></div>Emma R. — 100% present, 92% eng. <span style="margin-left:auto;font-size:10px;color:var(--color-text-tertiary)">all good</span></div>
+            <div class="timeline-row"><div class="timeline-dot" style="background:#639922"></div>Carlos M. — 94% present, 88% eng.</div>
+            <div class="timeline-row"><div class="timeline-dot" style="background:#EF9F27"></div>Priya S. — 80% present, 61% eng. <span style="margin-left:auto" class="wf-chip">watch</span></div>
+            <div class="timeline-row"><div class="timeline-dot" style="background:#E24B4A"></div>Jamie K. — 60% present, 23% eng. <span style="margin-left:auto" class="wf-chip" style="background:#FCEBEB;color:#791F1F">at risk</span></div>
+          </div>
+          <div class="wf-box ai" style="flex:1">
+            <div class="wf-label" style="color:#534AB7">✦ AI class summary</div>
+            <div style="font-size:10px;line-height:1.6;color:#3C3489">"Apr 25 session: Strong engagement on quiz (82%). Topic: fractions. Recommend follow-up for 3 students before next session."</div>
+            <div style="margin-top:5px"><span class="wf-btn primary">Export to LMS</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="annotations">
+    <div class="ann-card">
+      <div class="ann-head"><i class="ti ti-chart-line" aria-hidden="true"></i>UX rationale</div>
+      <div class="ann-item"><strong>4-metric header row</strong> — admin and teacher get the summary instantly without scrolling. Most important numbers first.</div>
+      <div class="ann-item"><strong>Drop-off visualization</strong> — shows when attention falls, not just that it fell. Actionable for lesson pacing decisions.</div>
+      <div class="ann-item"><strong>Risk indicators on student rows</strong> — "watch" and "at risk" labels reduce time to intervention. No manual review needed.</div>
+    </div>
+    <div class="ann-card">
+      <div class="ann-head"><i class="ti ti-building-store" aria-hidden="true"></i>Business rationale</div>
+      <div class="ann-item"><strong>Admin adoption driver</strong> — when principals can see class-level data, they push Zoom adoption school-wide.</div>
+      <div class="ann-item"><strong>LMS export</strong> — auto-sync to Canvas/Google/Schoology = deep integration that's painful to replace.</div>
+      <div class="ann-item"><strong>Compliance value</strong> — automated attendance logs satisfy district reporting requirements, reducing admin burden.</div>
+    </div>
+    <div class="ann-card">
+      <div class="ann-head"><i class="ti ti-brain" aria-hidden="true"></i>AI opportunities</div>
+      <div class="ann-item"><strong>Pattern-based alerts</strong> — ML model predicts chronic absenteeism 2 weeks before it becomes a concern.</div>
+      <div class="ann-item"><strong>Natural language summaries</strong> — LLM generates the "class summary" paragraph automatically post-session.</div>
+      <div class="ann-item"><strong>Benchmark comparison</strong> — AI compares class engagement to anonymized district averages for context.</div>
+    </div>
+    <div class="ann-card">
+      <div class="ann-head"><i class="ti ti-accessible" aria-hidden="true"></i>Accessibility + risks</div>
+      <div class="ann-item"><strong>A11y</strong> — bar charts need alt text + data tables for screen readers. Export includes accessible formats.</div>
+      <div class="ann-item"><strong>Risk</strong> — "at risk" labels can stigmatize students. Labels must be teacher-visible only, not student-facing.</div>
+      <div class="ann-item"><strong>Risk</strong> — engagement scores derived from AI may be biased (camera angle, lighting). Needs confidence indicators.</div>
+    </div>
+  </div>
+
+  <div class="section-label">Suggested KPIs</div>
+  <div class="kpi-row">
+    <span class="kpi-tag">LMS export rate ↑</span>
+    <span class="kpi-tag">Admin report views ↑</span>
+    <span class="kpi-tag">At-risk early interventions ↑</span>
+    <span class="kpi-tag">School-wide adoption ↑</span>
+    <span class="kpi-tag">Manual attendance time saved ↓</span>
+  </div>
+</div>
+
+<!-- SCREEN 4: INTEGRITY -->
+<div class="screen" id="s3">
+  <div class="screen-title">Screen 4 — academic integrity layer</div>
+  <div class="screen-goal"><i class="ti ti-shield-check" aria-hidden="true"></i> Manages AI misuse and assessment integrity during remote testing. Business goal: position Zoom as a trustworthy education platform for districts with compliance requirements.</div>
+
+  <div class="wf-shell">
+    <div class="wf-row">
+      <div class="wf-box dark" style="flex:0 0 160px">
+        <div class="wf-label" style="color:#888780">Assessment session</div>
+        <div style="font-size:10px;color:#D3D1C7;line-height:1.8">Math 7A Quiz<br>⏱ 18:34 elapsed<br>Duration: 30 min<br>Students: 22/24</div>
+        <div class="wf-divider"></div>
+        <div style="font-size:10px;color:#EF9F27">⚠ 4 alerts active</div>
+        <div class="wf-divider"></div>
+        <div style="font-size:10px;color:#D3D1C7">Mode: Assessment<br>Browser lock: ON<br>Screen share: OFF<br>AI tools: BLOCKED</div>
+        <div style="margin-top:8px"><span class="wf-btn cta">End assessment</span></div>
+      </div>
+
+      <div style="flex:1;display:flex;flex-direction:column;gap:7px">
+        <div class="wf-row">
+          <div class="wf-box solid" style="flex:1;text-align:center">
+            <div style="font-size:18px;font-weight:500;color:#639922">18</div>
+            <div style="font-size:10px;color:var(--color-text-secondary)">Students clear</div>
+          </div>
+          <div class="wf-box warn" style="flex:1;text-align:center">
+            <div style="font-size:18px;font-weight:500;color:#BA7517">3</div>
+            <div style="font-size:10px;color:#633806">Review needed</div>
+          </div>
+          <div class="wf-box danger" style="flex:1;text-align:center">
+            <div style="font-size:18px;font-weight:500;color:#A32D2D">1</div>
+            <div style="font-size:10px;color:#791F1F">High risk</div>
+          </div>
+          <div class="wf-box solid" style="flex:1;text-align:center">
+            <div style="font-size:18px;font-weight:500">4</div>
+            <div style="font-size:10px;color:var(--color-text-secondary)">Total alerts</div>
+          </div>
+        </div>
+
+        <div class="wf-row">
+          <div class="wf-box solid" style="flex:2">
+            <div class="wf-label">Student integrity feed</div>
+            <div style="font-size:10px;line-height:1.8">
+              <div style="display:flex;align-items:center;gap:4px;padding:2px 0;border-bottom:0.5px solid var(--color-border-tertiary)"><span class="wf-dot g"></span>Emma R. &nbsp;&nbsp;Risk: low <span style="margin-left:auto;color:var(--color-text-tertiary)">no alerts</span></div>
+              <div style="display:flex;align-items:center;gap:4px;padding:2px 0;border-bottom:0.5px solid var(--color-border-tertiary);color:#633806"><span class="wf-dot a"></span>Noah T. &nbsp;&nbsp;Risk: med <span style="margin-left:auto"><span class="wf-chip" style="background:#FAEEDA;color:#633806">tab switch ×2</span></span></div>
+              <div style="display:flex;align-items:center;gap:4px;padding:2px 0;border-bottom:0.5px solid var(--color-border-tertiary);color:#633806"><span class="wf-dot a"></span>Priya S. &nbsp;&nbsp;Risk: med <span style="margin-left:auto"><span class="wf-chip" style="background:#FAEEDA;color:#633806">window blur ×1</span></span></div>
+              <div style="display:flex;align-items:center;gap:4px;padding:2px 0;background:#FCEBEB;border-radius:2px;padding-left:4px;color:#791F1F"><span class="wf-dot r"></span>Jamie K. &nbsp;&nbsp;Risk: HIGH <span style="margin-left:auto"><span class="wf-chip" style="background:#F7C1C1;color:#791F1F">AI tool detected</span><span class="wf-chip" style="background:#F7C1C1;color:#791F1F">tab ×5</span></span></div>
+            </div>
+          </div>
+          <div class="wf-box ai" style="flex:1">
+            <div class="wf-label" style="color:#534AB7">✦ AI integrity score</div>
+            <div style="font-size:10px;line-height:1.7;color:#3C3489">Jamie K. flagged:<br>— ChatGPT tab detected<br>— 5 focus losses<br>— Rapid answer pattern<br><strong>Integrity score: 28/100</strong></div>
+            <div style="margin-top:5px"><span class="wf-btn primary">Review</span><span class="wf-btn">Notify parent</span></div>
+          </div>
+        </div>
+
+        <div class="wf-row">
+          <div class="wf-box solid">
+            <div class="wf-label">Assessment controls</div>
+            <div style="display:flex;flex-wrap:wrap;gap:4px;font-size:10px">
+              <span class="wf-btn">Lock browsers</span>
+              <span class="wf-btn">Disable chat</span>
+              <span class="wf-btn">Randomize questions</span>
+              <span class="wf-btn primary">✦ AI proctoring ON</span>
+              <span class="wf-btn">Screen recording</span>
+              <span class="wf-btn">Time extend: +5 min</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="wf-row">
+          <div class="wf-box solid">
+            <div class="wf-label">Post-assessment review panel</div>
+            <div style="font-size:10px;color:var(--color-text-secondary)">Teacher reviews flagged moments → mark as "reviewed" or "escalate to admin". All events timestamped and exportable.</div>
+            <div style="margin-top:5px"><span class="wf-btn">Export integrity report</span><span class="wf-btn">Escalate to admin</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="annotations">
+    <div class="ann-card">
+      <div class="ann-head"><i class="ti ti-shield" aria-hidden="true"></i>UX rationale</div>
+      <div class="ann-item"><strong>Traffic light scoring</strong> — green/amber/red risk tiers let teachers triage instantly. No need to read logs during an active test.</div>
+      <div class="ann-item"><strong>AI integrity score per student</strong> — aggregates multiple signals (tabs, focus, AI tool detection) into a single actionable number.</div>
+      <div class="ann-item"><strong>Assessment mode in sidebar</strong> — browser lock and AI tool blocking are visible as status, not buried in settings.</div>
+    </div>
+    <div class="ann-card">
+      <div class="ann-head"><i class="ti ti-building-store" aria-hidden="true"></i>Business rationale</div>
+      <div class="ann-item"><strong>District trust signal</strong> — academic integrity is a top compliance concern for administrators. This feature unlocks larger contracts.</div>
+      <div class="ann-item"><strong>Proctoring upsell</strong> — AI proctoring can be a premium add-on, creating a new revenue line beyond per-seat licensing.</div>
+      <div class="ann-item"><strong>Competitive wedge</strong> — neither Google Meet EDU nor Teams offer integrated AI proctoring. First-mover advantage.</div>
+    </div>
+    <div class="ann-card">
+      <div class="ann-head"><i class="ti ti-brain" aria-hidden="true"></i>AI opportunities</div>
+      <div class="ann-item"><strong>Behavioral pattern detection</strong> — ML flags unusual answer speed, copy-paste events, and AI-generated text patterns.</div>
+      <div class="ann-item"><strong>Tab/window monitoring</strong> — browser extension tracks focus events + classifies open tabs (permitted vs. flagged domains).</div>
+      <div class="ann-item"><strong>Confidence scoring</strong> — AI reports confidence level on each flag, reducing false positives and unfair accusations.</div>
+    </div>
+    <div class="ann-card">
+      <div class="ann-head"><i class="ti ti-scale" aria-hidden="true"></i>Accessibility + ethics</div>
+      <div class="ann-item"><strong>A11y</strong> — screen reader support required since students with disabilities may use assistive tech that could trigger false flags.</div>
+      <div class="ann-item"><strong>Ethics</strong> — AI flags are evidence, not verdicts. Teachers must review before any action. No automated punishments.</div>
+      <div class="ann-item"><strong>Risk</strong> — false positives harm students. Confidence thresholds must be conservative; bias audit required across demographics.</div>
+    </div>
+  </div>
+
+  <div class="section-label">Suggested KPIs</div>
+  <div class="kpi-row">
+    <span class="kpi-tag">School adoption rate ↑</span>
+    <span class="kpi-tag">District contract size ↑</span>
+    <span class="kpi-tag">Integrity reports generated ↑</span>
+    <span class="kpi-tag">Teacher confidence in remote testing ↑</span>
+    <span class="kpi-tag">False positive rate ↓</span>
+  </div>
+</div>
+
+<!-- SCREEN 5: LMS -->
+<div class="screen" id="s4">
+  <div class="screen-title">Screen 5 — LMS integration workspace</div>
+  <div class="screen-goal"><i class="ti ti-plug-connected" aria-hidden="true"></i> Reduces friction between Zoom and LMS tools. Brings assignments, grades, and materials into one view. Business goal: deep integration lock-in that reduces churn to competing platforms.</div>
+
+  <div class="wf-shell">
+    <div class="wf-row">
+      <div class="wf-box dark" style="flex:0 0 155px">
+        <div class="wf-label" style="color:#888780">Connected LMS</div>
+        <div style="font-size:10px;color:#D3D1C7;line-height:2">● Google Classroom<br>○ Canvas (connect)<br>○ Schoology (connect)<br>○ Clever SSO</div>
+        <div class="wf-divider"></div>
+        <div style="font-size:10px;color:#888780">Sync status<br><span style="color:#97C459">✓ Last sync: 2 min ago</span></div>
+        <div class="wf-divider"></div>
+        <div style="font-size:10px;color:#D3D1C7">Class: Math 7A ▾</div>
+        <div style="margin-top:8px"><span class="wf-btn primary" style="font-size:10px">✦ AI homework recap</span></div>
+      </div>
+
+      <div style="flex:1;display:flex;flex-direction:column;gap:7px">
+        <div class="wf-row">
+          <div class="wf-box solid" style="flex:2">
+            <div class="wf-label">Assignments — Math 7A</div>
+            <div style="font-size:10px;line-height:1.9">
+              <div style="display:flex;align-items:center;border-bottom:0.5px solid var(--color-border-tertiary);padding:2px 0"><span class="wf-dot g"></span>Fractions quiz — due May 8 — 18/24 submitted <span style="margin-left:auto"><span class="wf-chip">Grade now</span></span></div>
+              <div style="display:flex;align-items:center;border-bottom:0.5px solid var(--color-border-tertiary);padding:2px 0"><span class="wf-dot a"></span>Decimals HW — due May 6 — 2 missing <span style="margin-left:auto"><span class="wf-chip">Remind</span></span></div>
+              <div style="display:flex;align-items:center;padding:2px 0"><span class="wf-dot"></span>Unit 4 Project — due May 15 — not started <span style="margin-left:auto"><span class="wf-chip">Preview</span></span></div>
+            </div>
+            <div style="margin-top:5px"><span class="wf-btn primary">+ Create assignment</span><span class="wf-btn">Sync to Classroom</span></div>
+          </div>
+          <div class="wf-box ai" style="flex:1">
+            <div class="wf-label" style="color:#534AB7">✦ AI homework recap</div>
+            <div style="font-size:10px;line-height:1.6;color:#3C3489">"18/24 students completed the fractions quiz. Common error: denominator addition. 2 students need extension support. Suggested next: Section 4.3."</div>
+          </div>
+        </div>
+
+        <div class="wf-row">
+          <div class="wf-box solid" style="flex:1.5">
+            <div class="wf-label">Gradebook preview</div>
+            <div style="font-size:10px">
+              <div style="display:flex;gap:4px;margin-bottom:3px;color:var(--color-text-tertiary)"><span style="flex:2">Student</span><span style="flex:1;text-align:center">Quiz</span><span style="flex:1;text-align:center">HW</span><span style="flex:1;text-align:center">Avg</span></div>
+              <div style="display:flex;gap:4px;padding:2px 0;border-bottom:0.5px solid var(--color-border-tertiary)"><span style="flex:2">Emma R.</span><span style="flex:1;text-align:center;color:#639922">95</span><span style="flex:1;text-align:center;color:#639922">88</span><span style="flex:1;text-align:center;font-weight:500">92</span></div>
+              <div style="display:flex;gap:4px;padding:2px 0;border-bottom:0.5px solid var(--color-border-tertiary)"><span style="flex:2">Carlos M.</span><span style="flex:1;text-align:center;color:#639922">82</span><span style="flex:1;text-align:center;color:#639922">91</span><span style="flex:1;text-align:center;font-weight:500">87</span></div>
+              <div style="display:flex;gap:4px;padding:2px 0"><span style="flex:2">Jamie K.</span><span style="flex:1;text-align:center;color:#E24B4A">48</span><span style="flex:1;text-align:center;color:#BA7517">—</span><span style="flex:1;text-align:center;font-weight:500;color:#E24B4A">48</span></div>
+            </div>
+            <div style="margin-top:5px"><span class="wf-btn">Open in Classroom</span></div>
+          </div>
+          <div class="wf-box solid" style="flex:1.5">
+            <div class="wf-label">Classroom materials</div>
+            <div style="font-size:10px;line-height:1.9">
+              <div><i class="ti ti-file" aria-hidden="true" style="font-size:12px"></i> Unit 3 slides — shared Apr 20</div>
+              <div><i class="ti ti-file" aria-hidden="true" style="font-size:12px"></i> Fractions worksheet — shared May 1</div>
+              <div><i class="ti ti-folder" aria-hidden="true" style="font-size:12px"></i> Student projects folder</div>
+            </div>
+            <div style="margin-top:5px"><span class="wf-btn">Upload resource</span><span class="wf-btn primary">✦ Generate materials</span></div>
+          </div>
+        </div>
+
+        <div class="wf-row">
+          <div class="wf-box solid">
+            <div class="wf-label">Quick actions</div>
+            <div style="display:flex;flex-wrap:wrap;gap:4px">
+              <span class="wf-btn">Post announcement</span>
+              <span class="wf-btn">Return grades</span>
+              <span class="wf-btn">Schedule class</span>
+              <span class="wf-btn primary">✦ Draft feedback</span>
+              <span class="wf-btn">Sync roster</span>
+              <span class="wf-btn">Attach to meeting</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="annotations">
+    <div class="ann-card">
+      <div class="ann-head"><i class="ti ti-plug-connected" aria-hidden="true"></i>UX rationale</div>
+      <div class="ann-item"><strong>LMS sidebar always visible</strong> — sync status and connected platforms reduce teacher anxiety about data being out of date.</div>
+      <div class="ann-item"><strong>Assignments inline</strong> — teachers see submission status without leaving Zoom. One less context switch per day.</div>
+      <div class="ann-item"><strong>AI homework recap</strong> — converts raw submission data into instructional insight. Saves ~10 min of manual analysis per class.</div>
+    </div>
+    <div class="ann-card">
+      <div class="ann-head"><i class="ti ti-building-store" aria-hidden="true"></i>Business rationale</div>
+      <div class="ann-item"><strong>Ecosystem lock-in</strong> — deep LMS integration creates switching costs. Replacing Zoom means re-wiring the whole gradebook.</div>
+      <div class="ann-item"><strong>Upsell path</strong> — AI homework recap and draft feedback features can be Edu Pro tier, creating per-school upgrade pressure.</div>
+      <div class="ann-item"><strong>Churn reduction</strong> — teachers who integrate their LMS are 3–4x less likely to switch platforms (analogous to CRM integrations).</div>
+    </div>
+    <div class="ann-card">
+      <div class="ann-head"><i class="ti ti-brain" aria-hidden="true"></i>AI opportunities</div>
+      <div class="ann-item"><strong>Draft feedback</strong> — AI pre-writes personalized student feedback from grade data + engagement history.</div>
+      <div class="ann-item"><strong>Generate materials</strong> — LLM creates worksheets, quizzes, and lesson plans aligned to the current LMS unit.</div>
+      <div class="ann-item"><strong>Smart reminders</strong> — AI detects missing submissions and drafts parent/student reminder messages.</div>
+    </div>
+    <div class="ann-card">
+      <div class="ann-head"><i class="ti ti-accessible" aria-hidden="true"></i>Accessibility + risks</div>
+      <div class="ann-item"><strong>A11y</strong> — gradebook table must be navigable by keyboard and screen reader. Color coding needs text labels for grades.</div>
+      <div class="ann-item"><strong>Risk</strong> — multi-LMS sync conflicts. If Canvas and Google Classroom have different grade values, the UI must surface conflicts clearly.</div>
+      <div class="ann-item"><strong>Risk</strong> — data privacy. Grade data flowing through Zoom must meet FERPA and COPPA standards. Clear audit trail required.</div>
+    </div>
+  </div>
+
+  <div class="section-label">Suggested KPIs</div>
+  <div class="kpi-row">
+    <span class="kpi-tag">LMS connections per school ↑</span>
+    <span class="kpi-tag">Assignment sync rate ↑</span>
+    <span class="kpi-tag">Teacher churn rate ↓</span>
+    <span class="kpi-tag">AI feature adoption ↑</span>
+    <span class="kpi-tag">Grade export events ↑</span>
+  </div>
+
+  <div class="section-label">Tradeoffs across all 5 screens</div>
+  <div class="risk-row"><strong>AI transparency:</strong> All AI-generated content (summaries, risk scores, suggestions) must be clearly labeled. Teachers need to trust and override the AI.</div>
+  <div class="risk-row"><strong>Student privacy:</strong> COPPA, FERPA, and GDPR constraints limit what data can be collected from minors. Engagement AI must be opt-in with parental consent.</div>
+  <div class="risk-row"><strong>Performance overhead:</strong> Real-time AI features (heatmaps, attention scoring) require low-latency ML inference. Poor performance → teacher abandonment.</div>
+  <div class="risk-row"><strong>Onboarding cliff:</strong> Power features risk overwhelming new teachers. Progressive disclosure and default-off AI features are essential for adoption.</div>
+</div>
+
+</div>
+
+<script>
+function show(idx){
+  document.querySelectorAll('.screen').forEach(function(s,i){s.classList.toggle('active',i===idx)});
+  document.querySelectorAll('.nav-btn').forEach(function(b,i){b.classList.toggle('active',i===idx)});
+}
+</script>
